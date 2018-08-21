@@ -22,6 +22,7 @@ function pull-git{
 function new-user{
     if(!(get-localuser).name -like "admin")
         {
+	"Creating User..."
         $password = ConvertTo-SecureString "empiredidnothingwrong" -AsPlainText -Force
         New-LocalUser "admin" -Password $Password -FullName "webuser" | out-null
         }
@@ -31,7 +32,8 @@ function new-user{
 function gen-cert{
     if((Get-NetTCPConnection).LocalPort -ne 443)
         {
-        Install-WindowsFeature -Name Web-server -IncludeAllSubFeature | out-null
+	"Generating Self-Signed Certificate..."
+        Install-WindowsFeature -Name Web-server -IncludeAllSubFeature
         import-module webadministration
         Set-Location IIS:\SslBindings
         New-WebBinding -Name "Default Web Site" -IP "*" -Port 4434 -Protocol https
