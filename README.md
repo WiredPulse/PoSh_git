@@ -47,4 +47,4 @@ PS C:\> push-git
 
 # Additional Notes
 - The after git.ps1 is executed once, the webserver will continuously run without the need for PowerShell
-- The backend git-environment only runs when git.ps1 is running, terminating the PowerShell instance running the script kills the program
+- The backend git environment only runs when git.ps1 is running, terminating the PowerShell instance running the script kills the program
