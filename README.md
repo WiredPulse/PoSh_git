@@ -1,5 +1,5 @@
 # PoSh_git
-PoSh git is a git-like environment written in PowerShell. Any PowerShell scripts that are committed to the Master are then executed by the server with the output visible via frontend webpage. The webserver listens on 443 and is SSL encrypted via self-signed certificate.
+PoSh git is a git-like environment written in PowerShell. Any PowerShell scripts that are committed to the Master are then executed by the server with the output visible via the frontend webpage. The webserver requires authentication, listens on 443, and is SSL encrypted via a self-signed certificate.
 
 
 # Supported Functions
