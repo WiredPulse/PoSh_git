@@ -6,8 +6,6 @@ PoSh git currently supports the following functions:
 - pull-git : Merges Branch with the Master
 - push-git : Updates the Branch with latest contents from Master
 <br>
-<br>
-<br>
 
 # Data Flow
 ![Alt text](https://github.com/WiredPulse/PoSh_git/blob/master/Flow.png?raw=true "Optional Title")
