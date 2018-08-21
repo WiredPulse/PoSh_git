@@ -28,7 +28,7 @@ PS C:\> .\git.ps1
 PS C:\> copy-item c:\
 ```
 4. Open a browswer and navigate to https://localhost
-5. When prompted log in with admin:empiredidnothingwrong
+5. When prompted log in with **admin:empiredidnothingwrong**
 
 
 # Updating the Master
