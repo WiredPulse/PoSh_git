@@ -33,8 +33,14 @@ PS C:\> copy-item c:\
 
 # Updating the Master
 1. Save any PowerShell scripts you want to merge with the Master in the Branch directory<br>
-2. Type "pull-git"<br>
+2. Type:
+```
+PS C:\> pull-git
+```
 3. Within 45 seconds, the Master will be updated and output from the script will be visible on the webpage<br>
 
 # Updating Branch with latest Master
-1. Type "push-git"
+1. Type:
+```
+PS C:\> push-git
+```
