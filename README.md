@@ -1,2 +1,10 @@
 # PoSh_git
-A git-like environment in PowerShell
+PoSh git is a git-like environment in written in PowerShell
+
+# Installation
+
+
+git-like environment in PowerShell
+
+
+# 
