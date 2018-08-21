@@ -18,15 +18,23 @@ PoSh git currently supports the following functions:
 - Internet Information Services (IIS)
 
 # Installation
-1)
+1) Clone the repo to c:\ and uncompress it
+2) Execute the git.ps1 script
+```
+PS C:\> .\git.ps1
+```
+3) Copy the demo.ps1 script to the stager directory
+```
+PS C:\> copy-item c:\
+```
+4. Open a browswer and navigate to https://localhost
+5. When prompted log in with admin:empiredidnothingwrong
 
 
-# Updating Master
+# Updating the Master
 1. Save any PowerShell scripts you want to merge with the Master in the Branch directory<br>
-2. Type "push-git"<br>
+2. Type "pull-git"<br>
 3. Within 45 seconds, the Master will be updated and output from the script will be visible on the webpage<br>
-```
-function test() {
-  console.log("notice the blank line before this function?");
-}
-```
+
+# Updating Branch with latest Master
+1. Type "push-git"
