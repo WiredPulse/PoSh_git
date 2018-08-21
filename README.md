@@ -1,9 +1,10 @@
 # PoSh_git
-PoSh git is a git-like environment written in PowerShell. Any PowerShell scripts that are committed to the Master are then executed by the server and with the output visible via the frontend webpage.
+PoSh git is a git-like environment written in PowerShell. Any PowerShell scripts that are committed to the Master are then executed by the server with the output visible via the frontend webpage.
 
 # Supported Functions
 PoSh git currently supports the following functions:
-- te
+- pull-git : Merges Branch with the Master<br>
+- push-git : Updates the Branch with latest contents from Master
 <br>
 <br>
 <br>
