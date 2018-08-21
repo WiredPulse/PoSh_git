@@ -50,61 +50,70 @@ function gen-cert{
         set-location $env:USERPROFILE
 
         $CertShop=Get-ChildItem -Path Cert:\LocalMachine\My | where-Object {$_.subject -like "*localhost*"} | Select-Object -ExpandProperty Thumbprint
-        get-item -Path "cert:\LocalMachine\My\$certShop" | new-item -path IIS:\SslBindings\0.0.0.0.!443 | out-null
+        get-item -Path "cert:\LocalMachine\My\$certShop" | new-item -path IIS:\SslBindings\0.0.0.0!443 | out-null
         }
     }
 
 
 
-function watcher{
-    start-job -ScriptBlock{
-        while($true){
-        Sleep 30
-	    $file1 = Get-ChildItem $env:USERPROFILE\Desktop\PoSh_git\admin\master
-	    $file2 = Get-Item $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm -ErrorAction SilentlyContinue
-	
-        foreach($f1 in $file1)
-            {
-            if($file2.LastWriteTime -gt $f1.LastWriteTime)
-                {
-                & $f1.FullName | ConvertTo-Html | out-file $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm -Append
-                "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" | out-file $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm -Append
-                Copy-Item $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm C:\inetpub\wwwroot\admin\admin
-                }
-            else
-                {
-	            if(!(test-path $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm))
-                    {
-                    new-item $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm
-                    }
-                }
-            }
-        } 
-        }| out-null
+
+    
+
+if(!(Get-WmiObject win32_useraccount | where-object{$_.name -eq "admin"}))
+    {
+	"Creating User..."
+    secedit /export /cfg c:\secpol.cfg
+    (Get-Content C:\secpol.cfg).replace("PasswordComplexity = 1", "PasswordComplexity = 0") | Out-File C:\secpol.cfg
+    secedit /configure /db c:\windows\security\local.sdb /cfg c:\secpol.cfg /areas SECURITYPOLICY
+    Remove-Item -force c:\secpol.cfg -confirm:$false
+    gpupdate /force
+    $password = ConvertTo-SecureString "empiredidnothingwrong" -AsPlainText -Force
+    New-LocalUser "admin" -Password $Password -FullName "webuser" | out-null
     }
 
-    if(!(Get-WmiObject win32_useraccount | where-object{$_.name -eq "admin"}))
-        {
-	    "Creating User..."
-        secedit /export /cfg c:\secpol.cfg
-        (Get-Content C:\secpol.cfg).replace("PasswordComplexity = 1", "PasswordComplexity = 0") | Out-File C:\secpol.cfg
-        secedit /configure /db c:\windows\security\local.sdb /cfg c:\secpol.cfg /areas SECURITYPOLICY
-        Remove-Item -force c:\secpol.cfg -confirm:$false
-        gpupdate /force
-        $password = ConvertTo-SecureString "empiredidnothingwrong" -AsPlainText -Force
-        New-LocalUser "admin" -Password $Password -FullName "webuser" | out-null
-        }
 
 gen-cert
 Set-WebConfiguration system.webServer/security/authentication/anonymousAuthentication -PSPath IIS:\ -Location "Default web site" -Value @{enabled="false"} 
 Set-WebConfiguration system.webServer/security/authentication/basicAuthentication -PSPath IIS:\ -Location "Default web site" -Value @{enabled="true"} 
 Get-WebBinding -Port 80 -Name "Default Web Site" | Remove-WebBinding 
-Get-Website 'Default Web Site' | Stop-Website
-Get-Website 'Default Web Site' | Start-Website
 if(!(test-path C:\inetpub\wwwroot\admin)){new-item C:\inetpub\wwwroot\admin -ItemType directory | out-null}
 if(!(test-path C:\inetpub\wwwroot\admin\admin)){new-item C:\inetpub\wwwroot\admin\admin -ItemType directory | out-null}
-watcher
+$redirect = @"
+<!DOCTYPE html>`n
+<html>`n
+<meta http-equiv="refresh" content="0; url=https://localhost/admin/admin/index.htm" />`n
+<body>`n
+</body>`n
+</html>`n
+"@
+$redirect | out-file C:\inetpub\wwwroot\index.htm
+Get-Website 'Default Web Site' | Stop-Website
+Get-Website 'Default Web Site' | Start-Website
 
-
+start-job -ScriptBlock{
+    while($true){
+    Sleep 30
+	$file1 = Get-ChildItem $env:USERPROFILE\Desktop\PoSh_git\admin\master
+	$file2 = Get-Item $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm -ErrorAction SilentlyContinue
+	
+    foreach($f1 in $file1)
+        {
+        if($file2.LastWriteTime -lt $f1.LastWriteTime)
+            {
+            & $f1.FullName | ConvertTo-Html | out-file $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm -Append
+            "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" | out-file $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm -Append
+            Copy-Item $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm C:\inetpub\wwwroot\admin\admin
+            }
+        else
+            {
+	        if(!(test-path $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm))
+                {
+                new-item $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm
+                }
+            }
+        }
+    } 
+    }| out-null
+ 
 
 
