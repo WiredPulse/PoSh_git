@@ -18,17 +18,7 @@ function pull-git{
     copy-item $env:USERPROFILE\Desktop\PoSh_git\admin\master $env:USERPROFILE\Desktop\PoSh_git\admin\branch -Recurse -force    
     }
 
-
-function new-user{
-    if(!(get-localuser).name -like "admin")
-        {
-	"Creating User..."
-        $password = ConvertTo-SecureString "empiredidnothingwrong" -AsPlainText -Force
-        New-LocalUser "admin" -Password $Password -FullName "webuser" | out-null
-        }
-    }
-
-
+ 
 function gen-cert{
     if((Get-NetTCPConnection).LocalPort -ne 443)
         {
@@ -36,9 +26,9 @@ function gen-cert{
         Install-WindowsFeature -Name Web-server -IncludeAllSubFeature
         import-module webadministration
         Set-Location IIS:\SslBindings
-        New-WebBinding -Name "Default Web Site" -IP "*" -Port 4434 -Protocol https
-        $newCert = New-SelfSignedCertificate -DnsName "localhosst" -CertStoreLocation cert:\LocalMachine\my | out-null
-        $newCert | New-Item 0.0.0.0!4434 | out-null
+        New-WebBinding -Name "Default Web Site" -IP "*" -Port 443 -Protocol https
+        $newCert = New-SelfSignedCertificate -DnsName "localhost" -CertStoreLocation cert:\LocalMachine\my | out-null
+        $newCert | New-Item 0.0.0.0!443 | out-null
 
         $srcStoreScope = "LocalMachine"
         $srcStoreName = "my"
@@ -65,9 +55,10 @@ function gen-cert{
 
 function watcher{
     start-job -ScriptBlock{
+        while($true){
         Sleep 30
 	    $file1 = Get-ChildItem $env:USERPROFILE\Desktop\PoSh_git\admin\master
-	    $file2 = Get-Item $env:USERPROFILE\Desktop\PoSh_git\admin\stager
+	    $file2 = Get-Item $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm -ErrorAction SilentlyContinue
 	
         foreach($f1 in $file1)
             {
@@ -79,14 +70,23 @@ function watcher{
                 }
             else
                 {
-	            new-item $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm
+	            if(!(test-path $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm))
+                    {
+                    new-item $env:USERPROFILE\Desktop\PoSh_git\admin\stager\index.htm
+                    }
                 }
             }
-        } | out-null
-
+        } 
+        }| out-null
     }
 
-new-user
+    if(!(Get-WmiObject win32_useraccount | where-object{$_.name -eq "admin"}))
+        {
+	"Creating User..."
+        $password = ConvertTo-SecureString "empiredidnothingwrong" -AsPlainText -Force
+        New-LocalUser "admin" -Password $Password -FullName "webuser" | out-null
+        }
+
 gen-cert
 Set-WebConfiguration system.webServer/security/authentication/anonymousAuthentication -PSPath IIS:\ -Location "Default web site" -Value @{enabled="false"} 
 Set-WebConfiguration system.webServer/security/authentication/basicAuthentication -PSPath IIS:\ -Location "Default web site" -Value @{enabled="true"} 
