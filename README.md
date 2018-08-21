@@ -12,10 +12,13 @@ PoSh git currently supports the following functions:
 ![Alt text](https://github.com/WiredPulse/PoSh_git/blob/master/Flow.png?raw=true "Optional Title")
 <br>
 
+# System Requirements
+- Microsoft Server 2016 (180 day trial -- https://www.microsoft.com/evalcenter/evaluate-windows-server-2016?filetype=ISO)
+- PowerShell 5.1+
+- Internet Information Services (IIS)
+
 # Installation
-
-
-git-like environment in PowerShell
+1)
 
 
 # Updating Master
