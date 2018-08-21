@@ -2,11 +2,11 @@
 
 #>
 
-if(!(new-item $env:USERPROFILE\Desktop\PoSh_git -ItemType directory))
-if(!(new-item $env:USERPROFILE\Desktop\PoSh_git\admin -ItemType directory))
-if(!(new-item $env:USERPROFILE\Desktop\PoSh_git\admin\master -ItemType directory))
-if(!(new-item $env:USERPROFILE\Desktop\PoSh_git\admin\branch -ItemType directory))
-if(!(new-item $env:USERPROFILE\Desktop\PoSh_git\admin\stager -ItemType directory))
+if(!(test-path $env:USERPROFILE\Desktop\PoSh_git)){new-item $env:USERPROFILE\Desktop\PoSh_git -ItemType Directory | out-null}
+if(!(test-path $env:USERPROFILE\Desktop\PoSh_git\admin)){new-item $env:USERPROFILE\Desktop\PoSh_git\admin -ItemType directory | out-null}
+if(!(test-path $env:USERPROFILE\Desktop\PoSh_git\admin\master)){new-item $env:USERPROFILE\Desktop\PoSh_git\admin\master -ItemType directory | out-null}
+if(!(test-path $env:USERPROFILE\Desktop\PoSh_git\admin\branch)){new-item $env:USERPROFILE\Desktop\PoSh_git\admin\branch -ItemType directory | out-null}
+if(!(test-path $env:USERPROFILE\Desktop\PoSh_git\admin\stage)){new-item $env:USERPROFILE\Desktop\PoSh_git\admin\stager -ItemType directory | out-null}
 
 
 function push-git{
@@ -91,8 +91,8 @@ Set-WebConfiguration system.webServer/security/authentication/basicAuthenticatio
 Get-WebBinding -Port 80 -Name "Default Web Site" | Remove-WebBinding 
 Get-Website 'Default Web Site' | Stop-Website
 Get-Website 'Default Web Site' | Start-Website
-if(!(new-item C:\inetpub\wwwroot\admin -ItemType directory | out-null))
-if(!(new-item C:\inetpub\wwwroot\admin\admin -ItemType directory | out-null))
+if(!(test-path C:\inetpub\wwwroot\admin)){new-item C:\inetpub\wwwroot\admin -ItemType directory | out-null}
+if(!(test-path C:\inetpub\wwwroot\admin\admin)){new-item C:\inetpub\wwwroot\admin\admin -ItemType directory | out-null}
 watcher
 
 
