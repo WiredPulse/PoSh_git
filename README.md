@@ -39,7 +39,7 @@ PS C:\> pull-git
 ```
 3. Within 45 seconds, the Master will be updated and output from the script will be visible on the webpage<br>
 
-# Updating Branch with latest Master
+# Updating the Branch with latest Master
 1. Type:
 ```
 PS C:\> push-git
